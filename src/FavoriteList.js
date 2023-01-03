@@ -5,13 +5,17 @@ const FavoriteList = props => {
   const { fMovies } = props;
   if (fMovies) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <ul>
-        {fMovies.map(movie => (
-          <li key={movie.id}>{movie.title}</li>
-        ))}
-      </ul>
+      <div>
+        <h3>Favorite List:</h3>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <ul className="favorite-list">
+          {fMovies.map(movie => (
+            <li key={movie.id}>{movie.title}</li>
+          ))}
+        </ul>
       </div>
+      </div>
+      
     );
   }
   return null;

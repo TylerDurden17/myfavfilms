@@ -20,28 +20,31 @@ const MovieList = props => {
     const { movie } = props;
     return (
       <div>
-        <h2>{movie.title}</h2>
+        <h4>{movie.title}</h4>
         <p>{movie.overview}</p>
       </div>
     );
   };
   return (
-    <div>
-        <div>
-      <button onClick={toggleDropdown}>Toggle Dropdown</button></div>
-      {isOpen && (
-        <ul style={{ position: 'absolute', zIndex: 1, backgroundColor: 'white', border: '1px solid', overflow: 'auto', maxHeight: '70vh' }}>
-          {movies.map(movie => (
-            <li key={movie.id} style={{ listStyle: 'none', padding: '10px', width: '300px', borderBottom: '1px solid' }}>
-              <Movie movie={movie} />
-              <button onClick={() => addToFavorites(movie)}>Add to Favorites</button>
-            </li>
-            
-          ))}
-        </ul>
-      )}
+    <div className='both' >
       <div>
-        <FavoriteList fMovies={favoriteMovies} />;
+        <br></br>
+        <button onClick={toggleDropdown}>Toggle Dropdown</button>
+        {isOpen && (
+          <ul className="movie-list" >
+            {movies.map(movie => (
+              <li className="movie" key={movie.id} style={{ listStyle: 'none' }}>
+                <Movie movie={movie} />
+                <button onClick={() => addToFavorites(movie)}>Add to Favorites</button>
+              </li>
+              
+            ))}
+          </ul>
+        )}
+      </div>
+      
+      <div>
+        <FavoriteList fMovies={favoriteMovies} />
       </div>
     </div>
   );
