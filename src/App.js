@@ -1,19 +1,34 @@
 import React from 'react';
-import SearchBar from './SearchBar';
-//import MovieList from './MovieList';
-import FavoriteList from './FavoriteList';
+import Login from './firebase'
 import './App.css';
-//import { useState, useEffect } from 'react';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import ErrorPage from "./error-page";
+import Dashboard from './dashboard';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login/>,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard/>,
+    errorElement: <ErrorPage />
+  }
+]);
 
 function App() {
 
   return (
     <div>
-      <SearchBar/>
-      <FavoriteList/>
+      <RouterProvider router={router} />
     </div>
   );
 }
 
 export default App;
-//api key: c137c3a1a3b8d29bd41a87a70dacbb3c
+//api of themoviedb key: c137c3a1a3b8d29bd41a87a70dacbb3c

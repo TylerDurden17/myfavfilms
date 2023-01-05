@@ -3,6 +3,7 @@ import React from 'react';
 that the fMovies prop is defined before trying to map over it*/
 const FavoriteList = props => {
   const { fMovies } = props;
+
   if (fMovies) {
     return (
       <div>

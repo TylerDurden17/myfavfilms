@@ -9,7 +9,21 @@ const MovieList = props => {
   const [ favoriteMovies, setFavoriteMovies ] = useState([])
   
   const addToFavorites = movie => {
-    setFavoriteMovies([...favoriteMovies, movie]);
+
+    const existingMovie = favoriteMovies.find((m) => m.id === movie.id);
+    // Add movie to the list if it does not exist
+    if (!existingMovie) setFavoriteMovies([...favoriteMovies, movie]);
+    
+    // fetch('/.netlify/functions/add-favorite-movie', {
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     id: 0,
+    //     username: "Kartikey Rai",
+    //     movie: `${JSON.stringify(movie.title) + " " + JSON.stringify(movie.release_date.replace(/^(\d{4})-\d{2}-\d{2}$/, '$1'))}`
+    //   }),
+    //   }).then(response => {
+    //     console.log(response);
+    //   });
   };
 
   const toggleDropdown = () => {
@@ -21,25 +35,26 @@ const MovieList = props => {
     return (
       <div>
         <h4>{movie.title}</h4>
-        <p>{movie.overview}</p>
+        <p>{movie.release_date.replace(/^(\d{4})-\d{2}-\d{2}$/, '$1')}</p>
       </div>
     );
   };
+
   return (
     <div className='both' >
       <div>
         <br></br>
         <button onClick={toggleDropdown}>Toggle Dropdown</button>
         {isOpen && (
-          <ul className="movie-list" >
+          <div className="movie-list" >
             {movies.map(movie => (
-              <li className="movie" key={movie.id} style={{ listStyle: 'none' }}>
+              <div className="movie" key={movie.id}>
                 <Movie movie={movie} />
-                <button onClick={() => addToFavorites(movie)}>Add to Favorites</button>
-              </li>
+                <button id="addToFavoritesButton" onClick={() => addToFavorites(movie) } >Add to Favorites</button>
+              </div>
               
             ))}
-          </ul>
+          </div>
         )}
       </div>
       
