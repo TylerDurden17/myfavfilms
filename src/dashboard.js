@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from './SearchBar';
 import FavoriteList from './FavoriteList';
 import {auth} from './firebase'
@@ -21,7 +21,6 @@ const Logout = () => {
 const Dashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    //const user = useRef(false)
 
     /*The onAuthStateChanged method is called every time the component is rendered, which may result in multiple 
     subscriptions being created and causing unexpected behavior.
@@ -36,7 +35,6 @@ const Dashboard = () => {
       const unsubscribe = auth.onAuthStateChanged((authUser) => {
         if (authUser) {
           setUser(authUser);
-          console.log('yes');
         } else {
           //setUser(null);
           console.log('no');
@@ -46,15 +44,18 @@ const Dashboard = () => {
       return () => unsubscribe();
     }, []);
 
+
     return (
       <div>
         {user ? (
         <div>
-          <h1>Welcome to the dashboard!</h1>
-          <p>Only authenticated users can see this content.</p>
+          <header>
+            <h1>My Favorite Films</h1>
+          </header>
+          <button onClick={Logout}>Log out</button>
+          <h3>{ " " + user.displayName }</h3>
           <SearchBar />
           <FavoriteList />
-          <button onClick={Logout}>Log out</button>
         </div>
       ) : (
         <div>

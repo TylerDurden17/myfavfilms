@@ -16,7 +16,10 @@ body {
   max-height: 50vh;
   overflow: auto;
 }
-
+.theList{
+  border: 2px solid;
+  width: fit-content;
+}
 .movie {
   width: 420px;
   max-width: 500px;

@@ -7,21 +7,49 @@ exports.handler = async (event, context) => {
   const client = new faunadb.Client({
     secret: `${REACT_APP_fauna_secret}`
   });
-  const data = JSON.parse(event.body);
-  const response = await client.query(
-    faunadb.query.Create(faunadb.query.Collection('favorite_movies_of_all_time'), {
-      data,
-    }),
-  )
-  .then(response => {
-    console.log(response);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+  const q = faunadb.query;
+  const  data  = JSON.parse(event.body);
+  const userId = data.userId.uid;
+  const email = data.userId.email;
+  const filmName = `${data.filmName}`;
+  const year = `${data.year}`;
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(response),
-  };
-};
+  try {
+    // Check if a list for this user already exists
+    const userList = await client.query(
+      q.Get(
+        q.Match(
+          q.Index('user_lists_by_user_id'),
+          userId
+        )
+      )
+    );
+
+    // If the list already exists, update it with the new movie
+    const updatedList = await client.query(
+      q.Update(
+        userList.ref,
+        { data: { favorite_movies_of_all_time: q.Append(q.Select('favorite_movies_of_all_time', userList.data), [{ filmName, year }]) } }
+      )
+    );
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(updatedList),
+    };
+  } catch (error) {
+    // If the list does not exist, create a new one with the movie
+    const newList = await client.query(
+      q.Create(
+        q.Collection('user_lists'),
+        { data: { user_id: userId, email: email, favorite_movies_of_all_time: [{ filmName, year }] } }
+      )
+      
+    );
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(newList),
+    };
+  }
+};  

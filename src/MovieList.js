@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import FavoriteList from './FavoriteList';
+//import FavoriteList from './FavoriteList';
+import {auth} from './firebase'
 
 const MovieList = props => {
   // component code goes here
@@ -13,17 +14,19 @@ const MovieList = props => {
     const existingMovie = favoriteMovies.find((m) => m.id === movie.id);
     // Add movie to the list if it does not exist
     if (!existingMovie) setFavoriteMovies([...favoriteMovies, movie]);
+    //console.log(auth.currentUser);
+    const data = {
+      userId: auth.currentUser,
+      filmName: movie.title,
+      year: movie.release_date.replace(/^(\d{4})-\d{2}-\d{2}$/, '$1')
+    };
+    fetch('/.netlify/functions/add-favorite-movie', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }).then(response => {
+      console.log(response);
+    });
     
-    // fetch('/.netlify/functions/add-favorite-movie', {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     id: 0,
-    //     username: "Kartikey Rai",
-    //     movie: `${JSON.stringify(movie.title) + " " + JSON.stringify(movie.release_date.replace(/^(\d{4})-\d{2}-\d{2}$/, '$1'))}`
-    //   }),
-    //   }).then(response => {
-    //     console.log(response);
-    //   });
   };
 
   const toggleDropdown = () => {
@@ -57,10 +60,10 @@ const MovieList = props => {
           </div>
         )}
       </div>
-      
+      {/*
       <div>
         <FavoriteList fMovies={favoriteMovies} />
-      </div>
+      </div>*/}
     </div>
   );
   

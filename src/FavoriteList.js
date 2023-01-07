@@ -1,26 +1,44 @@
-import React from 'react';
-/*Add a check to the FavoriteList component to make sure 
-that the fMovies prop is defined before trying to map over it*/
-const FavoriteList = props => {
-  const { fMovies } = props;
+import React, { useState, useEffect } from 'react';
 
-  if (fMovies) {
-    return (
-      <div>
-        <h3>Favorite List:</h3>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <ul className="favorite-list">
-          {fMovies.map(movie => (
-            <li key={movie.id}>{movie.title}</li>
+const FavoriteList = () => {
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await fetch('/.netlify/functions/get-favorite-movies');
+        const data = await response.json();
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setMovies(data);
+        }
+      } catch (error) {
+        setError(error.message);
+        console.log(error);
+      }
+      //
+      //<li key={movie.filmName}>{movie.filmName} ({movie.year})</li>
+      //
+    };
+
+    fetchMovies();
+  }, []);
+
+  return (
+    <div> {movies.map(movieList => (
+      <div className='theList' key={movieList.ref['@ref'].id}>
+        <h2>{movieList.data.email.replace(/@gmail\.com$/, '')}</h2>
+        <ol>
+          {movieList.data.favorite_movies_of_all_time.map(movie => (
+            <li key={movie.filmName}>{movie.filmName} ({movie.year})</li>
           ))}
-        </ul>
+        </ol>
       </div>
-      </div>
-      
-    );
-  }
-  return null;
+    ))}
+    </div>
+  );
 };
-
 
 export default FavoriteList;
